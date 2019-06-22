@@ -10,8 +10,6 @@ namespace SasnoBot.Services
 {
     public class RoomLifetimeService
     {
-        private List<ChannelWithEmptyTime> channelsToMonitor = new List<ChannelWithEmptyTime>();
-        private DateTime lastCheck = DateTime.Now;
         private DiscordSocketClient client;
 
         public RoomLifetimeService(DiscordSocketClient client)
@@ -26,7 +24,6 @@ namespace SasnoBot.Services
         public void AddChannelToMonitor(ulong voiceChannelId)
         {
             ChannelWithEmptyTime channel = new ChannelWithEmptyTime(voiceChannelId);
-            channelsToMonitor.Add(channel);
             CheckPeriodically(channel);
         }
 
@@ -42,7 +39,11 @@ namespace SasnoBot.Services
             var res = new ElapsedEventHandler((sender, args) =>
             {
                 var vc = client.GetChannel(channel.VoiceChannelId) as SocketVoiceChannel;
-                if (vc == null) { return; }
+                if (vc == null)
+                {
+                    timer.Dispose();
+                    return;
+                }
 
                 if (vc.Users.Any())
                 {

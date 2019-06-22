@@ -16,7 +16,7 @@ namespace SasnoBot.CommandModules
 
         [Command("createRoom")]
         [Summary("Creates temporary room")]
-        [Alias("cr")]
+        [Alias("cr", "create")]
         public async Task CrateRoomAsync([Remainder][Summary("The name of the room")] string roomName)
         {
             var guild = Context.Guild;

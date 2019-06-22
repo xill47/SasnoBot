@@ -1,4 +1,5 @@
-﻿using System.Diagnostics;
+﻿using System;
+using System.Diagnostics;
 using System.Threading.Tasks;
 
 namespace SasnoBot
@@ -7,10 +8,10 @@ namespace SasnoBot
     {
         static async Task Main(string[] args)
         {
-            using (var startup = new SasnoBot())
+            using (var bot = new SasnoBot(args))
             {
-                await startup.Configure();
-                Debug.WriteLine("Configuration finished");
+                await bot.Configure();
+                Console.WriteLine("Configuration finished");
                 await Task.Delay(-1);
             }
         }

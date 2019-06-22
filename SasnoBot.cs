@@ -3,7 +3,9 @@ using Discord.Commands;
 using Discord.WebSocket;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using SasnoBot.Database;
 using SasnoBot.Services;
+using SasnoBot.Services.Interfaces;
 using System;
 using System.Reflection;
 using System.Threading.Tasks;
@@ -16,14 +18,19 @@ namespace SasnoBot
         private IConfigurationRoot _configuration;
         private CommandService _commands;
         private IServiceProvider _services;
+        private string[] _serviceArgs;
+
+        public SasnoBot(string[] args = null)
+        {
+            _serviceArgs = args;
+        }
 
         public async Task Configure()
         {
             _client = new DiscordSocketClient();
 
             var configBuilder = new ConfigurationBuilder()
-                .SetBasePath(AppContext.BaseDirectory)
-                .AddJsonFile("config.json", optional: false, reloadOnChange: true);
+                .AddCommandLine(_serviceArgs);
             _configuration = configBuilder.Build();
 
             _commands = new CommandService();
@@ -32,9 +39,11 @@ namespace SasnoBot
             roomLifetimeService.Initialize();
 
             _services = new ServiceCollection()
+                .AddDbContext<SasnoBotDbContext>(ServiceLifetime.Scoped)
                 .AddSingleton(_client)
                 .AddSingleton(_commands)
                 .AddSingleton(roomLifetimeService)
+                .AddScoped<IUserManager, UserManager>()
                 .BuildServiceProvider();
 
             await InstallCommandsAsync();
