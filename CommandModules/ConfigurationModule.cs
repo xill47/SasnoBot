@@ -16,20 +16,6 @@ namespace SasnoBot.CommandModules
             this.userManager = userManager;
         }
 
-        protected override void BeforeExecute(CommandInfo command)
-        {
-            
-            base.BeforeExecute(command);
-        }
-
-        [Command("verbose")]
-        [Summary("Makes output to this channel more verbose")]
-        [Alias("v")]
-        public async Task MakeOutputVerbose()
-        {
-
-        }
-
         [Command("canuseconfig"), Alias("cuc")]
         public async Task CheckPriveledge(IUser user = null)
         {
@@ -40,7 +26,7 @@ namespace SasnoBot.CommandModules
             else if (await userManager.IsUserAllowedToDoConfiguration(user.Id))
             {
                 await ReplyAsync($"{user.Mention} is allowed to use config");
-            } 
+            }
             else
             {
                 await ReplyAsync("Not allowed to use config");

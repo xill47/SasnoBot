@@ -4,9 +4,9 @@ using System.Threading.Tasks;
 
 namespace SasnoBot
 {
-    class Program
+    internal static class Program
     {
-        static async Task Main(string[] args)
+        private static async Task Main(string[] args)
         {
             using (var bot = new SasnoBot(args))
             {

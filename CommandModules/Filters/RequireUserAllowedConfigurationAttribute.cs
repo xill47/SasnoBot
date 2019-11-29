@@ -9,7 +9,7 @@ namespace SasnoBot.CommandModules.Filters
 {
     public class RequireUserAllowedConfigurationAttribute : PreconditionAttribute
     {
-        public override async Task<PreconditionResult> CheckPermissions(ICommandContext context, CommandInfo command, IServiceProvider services)
+        public async override Task<PreconditionResult> CheckPermissionsAsync(ICommandContext context, CommandInfo command, IServiceProvider services)
         {
             var userId = context.User.Id;
             var isAdmin = context.Guild.GetUserAsync(userId).Result.GuildPermissions.Administrator;

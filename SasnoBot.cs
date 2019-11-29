@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 
 namespace SasnoBot
 {
-    class SasnoBot : IDisposable
+    internal class SasnoBot : IDisposable
     {
         private DiscordSocketClient _client;
         private IConfigurationRoot _configuration;
@@ -57,7 +57,7 @@ namespace SasnoBot
         private async Task InstallCommandsAsync()
         {
             _client.MessageReceived += HandleCommandAsync;
-            await _commands.AddModulesAsync(Assembly.GetEntryAssembly());
+            await _commands.AddModulesAsync(Assembly.GetEntryAssembly(), _services);
         }
 
         private async Task HandleCommandAsync(SocketMessage messageParam)
@@ -75,7 +75,7 @@ namespace SasnoBot
                 if (!result.IsSuccess && result.Error != CommandError.UnknownCommand)
                     await context.Channel.SendMessageAsync(result.ErrorReason);
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 await context.Channel.SendMessageAsync("Exception!");
                 await context.Channel.SendMessageAsync($"`{e.GetType().FullName} - {e.Message}`");
